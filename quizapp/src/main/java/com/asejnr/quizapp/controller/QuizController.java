@@ -2,9 +2,9 @@ package com.asejnr.quizapp.controller;
 
 import com.asejnr.quizapp.model.QuestionWrapper;
 import com.asejnr.quizapp.model.Quiz;
+import com.asejnr.quizapp.model.Response;
 import com.asejnr.quizapp.service.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,8 +32,8 @@ public class QuizController {
         return quizService.getQuizQuestions(id);
     }
 
-    @PostMapping("/submit/{id}")
-    public ResponseEntity<Integer> submitQuiz(@PathVariable int id, @RequestBody Quiz quiz) {
-        return quizService.calculateResult(id, quiz);
+    @PostMapping("/{id}/submit")
+    public ResponseEntity<Integer> submitQuiz(@PathVariable int id, @RequestBody List<Response> responses) {
+        return quizService.calculateResult(id, responses);
     }
 }

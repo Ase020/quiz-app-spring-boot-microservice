@@ -3,6 +3,7 @@ package com.asejnr.quizapp.service;
 import com.asejnr.quizapp.model.Question;
 import com.asejnr.quizapp.model.QuestionWrapper;
 import com.asejnr.quizapp.model.Quiz;
+import com.asejnr.quizapp.model.Response;
 import com.asejnr.quizapp.repository.QuestionRepository;
 import com.asejnr.quizapp.repository.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +57,26 @@ public class QuizService {
             questionsForUser.add(questionWrapper);
         }
         return new ResponseEntity<>(questionsForUser, HttpStatus.OK);
+    }
+
+    public ResponseEntity<Integer> calculateResult(int id, List<Response> responses) {
+            Optional<Quiz> quiz = quizRepository.findById(id);
+            if (quiz.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            List<Question> questions = quiz.get().getQuestions();
+            if (questions == null || questions.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            int right = 0;
+            int increment = 0;
+            for (Response response : responses) {
+                if (response.getResponse().equals(questions.get(increment).getRightAnswer()))
+                    right++;
+
+                increment++;
+            }
+            return new ResponseEntity<>(right, HttpStatus.OK);
     }
 }
